@@ -37,7 +37,7 @@ def game(cli_sock, port, username):
         opcionJuego = objeto['opcion']
         if opcionJuego == 1:
             if startGame[port] == False:
-                if ROOMS[port] > 2 and ROOM[port] < 6:
+                if ROOMS[port] > 2 and ROOMS[port] < 6:
                     mensajeInicio = {
                         'header' : 'inicio'
                     }
@@ -64,7 +64,7 @@ def game(cli_sock, port, username):
 
         elif opcionJuego == 2:
             if startGame[port] == True:
-                broadcast_usr(username, cli_sock, objeto)
+                broadcast_usr(username, cli_sock, objeto, port)
             else:
                 mensajeInicio = {
                     'header' : 'fallo',
@@ -73,24 +73,24 @@ def game(cli_sock, port, username):
                 mensajeInicioP = pickle.dumps(mensajeInicio)
                 cli_sock.send(mensajeInicioP)        
 
-def broadcast_usr(uname, cli_sock, objeto):
+def broadcast_usr(uname, cli_sock, objeto, port):
     try:
         data = objeto['mensaje']
         if data:
             print("{0} mando un mensaje".format(uname))
-            b_usr(cli_sock, uname, data)
+            b_usr(cli_sock, uname, data, port)
     except Exception as x:
         print(x.message)
 
-def b_usr(cs_sock, sen_name, msg):
-    for client in CONNECTION_LIST:
-        if client[1] != cs_sock:
+def b_usr(cs_sock, sen_name, msg, port):
+    for client in ROOMScon[port]:
+        if client != cs_sock:
             objeto = { 
                 'header' : 'chat',
                 'nombre' : sen_name,
                 'mensaje' : msg
             }
-            client[1].send(pickle.dumps(objeto))
+            client.send(pickle.dumps(objeto))
 
 
 c = PORT
@@ -138,5 +138,6 @@ while(True):
 
 for index, thread in enumerate(threads):
     thread.join
+
 
 
