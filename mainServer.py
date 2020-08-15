@@ -15,6 +15,7 @@ def thread_function1(port):
     ROOMScon[port] = list()
     startGame[port] = False
     r.listen(5)
+    roomThreads = list()
     while (ROOMS[RPORT] < 5):
         #print("In room loop")
         roomCon, temp = r.accept()
@@ -25,6 +26,7 @@ def thread_function1(port):
         print(ROOMS)
         thread_client = threading.Thread(target = game, args=[roomCon,RPORT,username])
         thread_client.start()
+        roomThreads.append(thread_client)
 
 def game(cli_sock, port, username):
     global startGame
@@ -113,22 +115,24 @@ while(True):
     
     conn, addr = s.accept()
     print ('Connected by', addr)
-    c = c + 1
     data_string = pickle.dumps(menu)
     conn.send(data_string)
     data = conn.recv(4096)
     data_variable = pickle.loads(data)
     #print(data_variable)
     if (data_variable == '1'):
+        c = c + 1
         x = threading.Thread(target=thread_function1, args=(c,))
         threads.append(x)
         x.start()
         ROOMS[c] = 0
 
         check_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        """
         print("Checking new room....")
         while((check_socket.connect_ex((HOST, c))) == 0):
             pass
+        """
         str1 = c
     else:
         str1 = str(keys[int(data_variable)-2])
@@ -138,6 +142,4 @@ while(True):
 
 for index, thread in enumerate(threads):
     thread.join
-
-
 
