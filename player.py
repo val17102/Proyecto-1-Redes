@@ -274,7 +274,9 @@ print(serverResponseRoom)
 
 cli_sock.connect((ip_address, serverResponseRoom))
 print("Conected")
-
+username = input("Ingrese su username")
+data_variable = pickle.dumps(username)
+cli_sock.send(data_variable)
 thread_send = threading.Thread(target = send)
 thread_send.start()
 

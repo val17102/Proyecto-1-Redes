@@ -14,6 +14,7 @@ ROOMSturnPlayers = {}
 ROOMSpreviousTurnPlayers = {}
 ROOMSpostTurnPlayers = {}
 ROOMSplayersAlive = {}
+ROOMSusername = {}
 giveCard = {}
 toGiveCard = {}
 
@@ -43,6 +44,7 @@ def thread_function1(port):
     print('starting to listen in Room', RPORT)
     ROOMScon[port] = list()
     ROOMSplayersAlive[port] = list()
+    ROOMSusername[port] = list()
     ROOMpilesPlayers[port] = {}
     startGame[port] = False
     giveCard[port] = False
@@ -69,9 +71,13 @@ def thread_function1(port):
     while (ROOMS[RPORT] < 5):
         #print("In room loop")
         roomCon, temp = r.accept()
-        username = "User "+str(ROOMS[RPORT])
+        rdata = roomCon.recv(4096)
+        username = pickle.loads(rdata)
+        #username = "User "+str(ROOMS[RPORT])
         ROOMScon[RPORT].append(roomCon)
+        ROOMSusername[RPORT].append(username)
         ROOMSplayersAlive[RPORT].append(roomCon)
+        ROOMS
         ROOMS[RPORT] = ROOMS[RPORT] + 1
         ROOMpilesPlayers[RPORT][roomCon] = []
         print ('Connected by ', temp, ' on room', RPORT)
@@ -152,7 +158,7 @@ def game(cli_sock, port, username):
                         ROOMSturnPlayers[port].append(0)
                         mensajeTurno = {
                             'header' : 'turno',
-                            'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                            'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                         }
                         mensajeTurnoP = pickle.dumps(mensajeTurno)
                         for client in ROOMScon[port]:
@@ -227,7 +233,7 @@ def game(cli_sock, port, username):
                                             ROOMSturnPlayers[port][0] = ROOMSpreviousTurnPlayers[port][0]
                                             mensajeTurno = {
                                                 'header' : 'turno',
-                                                'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                             }
                                             mensajeTurnoP = pickle.dumps(mensajeTurno)
                                             for client in ROOMScon[port]:
@@ -269,7 +275,7 @@ def game(cli_sock, port, username):
                                         ### Notificamos quien es el proximo en jugar
                                         mensajeTurno = {
                                             'header' : 'turno',
-                                            'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                            'mensaje' : '\nEs el turno del User ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                         }
                                         mensajeTurnoP = pickle.dumps(mensajeTurno)
                                         for client in ROOMScon[port]:
@@ -291,7 +297,7 @@ def game(cli_sock, port, username):
                                             ROOMSturnPlayers[port] = [ROOMScon[port].index(cli_sock)]
                                             mensajeTurno = {
                                                 'header' : 'turno',
-                                                'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                             }
                                             mensajeTurnoP = pickle.dumps(mensajeTurno)
 
@@ -317,7 +323,7 @@ def game(cli_sock, port, username):
                                             ### Notificamos quien es el proximo en jugar
                                             mensajeTurno = {
                                                 'header' : 'turno',
-                                                'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                             }
                                             ### Al terminar un turno normal se quita el previous y el post TURN
                                             mensajeTurnoP = pickle.dumps(mensajeTurno)
@@ -335,7 +341,7 @@ def game(cli_sock, port, username):
                                                 giveCard[port] = clientePedir
                                                 mensajeTurno = {
                                                     'header' : 'usoCarta',
-                                                    'mensaje' : '\nEl jugador uso la carta FAVOR al User '+ str(indexUsuario)
+                                                    'mensaje' : '\nEl jugador uso la carta FAVOR al User: '+ ROOMSusername[port][indexUsuario]
                                                 }
                                                 mensajeTurnoP = pickle.dumps(mensajeTurno)
                                                 for client in ROOMScon[port]:
@@ -665,7 +671,7 @@ def game(cli_sock, port, username):
                                         ROOMSturnPlayers[port] = [ROOMScon[port].index(cli_sock)]
                                         mensajeTurno = {
                                             'header' : 'turno',
-                                            'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                            'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                         }
                                         ### Al terminar un turno normal se quita el previous y el post TURN
                                         ROOMSpreviousTurnPlayers[port] = []
@@ -690,7 +696,7 @@ def game(cli_sock, port, username):
                                         ### Notificamos quien es el proximo en jugar
                                         mensajeTurno = {
                                             'header' : 'turno',
-                                            'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                            'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                         }
                                         ### Al terminar un turno normal se quita el previous y el post TURN
                                         ROOMSpreviousTurnPlayers[port] = []
@@ -720,7 +726,7 @@ def game(cli_sock, port, username):
                                             ROOMSturnPlayers[port] = [ROOMScon[port].index(cli_sock)]
                                             mensajeTurno = {
                                                 'header' : 'turno',
-                                                'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                             }
                                             ### Al terminar un turno normal se quita el previous y el post TURN
                                             ROOMSpreviousTurnPlayers[port] = []
@@ -745,7 +751,7 @@ def game(cli_sock, port, username):
                                             ### Notificamos quien es el proximo en jugar
                                             mensajeTurno = {
                                                 'header' : 'turno',
-                                                'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                             }
                                             ### Al terminar un turno normal se quita el previous y el post TURN
                                             ROOMSpreviousTurnPlayers[port] = []
@@ -793,7 +799,7 @@ def game(cli_sock, port, username):
                                             ### Notificamoso quien es el proximo en jugar
                                             mensajeTurno = {
                                                 'header' : 'ganar',
-                                                'mensaje' : '\nEl ganador es el User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                                'mensaje' : '\nEl ganador es el User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                             }
                                             mensajeTurnoP = pickle.dumps(mensajeTurno)
                                             for client in ROOMScon[port]:
@@ -803,7 +809,7 @@ def game(cli_sock, port, username):
                                             ### Notificamoso quien es el proximo en jugar
                                             mensajeTurno = {
                                                 'header' : 'turno',
-                                                'mensaje' : '\nEs el turno del User ' + str(ROOMSturnPlayers[port][0])+'.'
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
                                             }
                                             mensajeTurnoP = pickle.dumps(mensajeTurno)
                                             for client in ROOMScon[port]:
@@ -907,7 +913,7 @@ def game(cli_sock, port, username):
                     mensaje = ''
                     contador = 0
                     for jugador in ROOMScon[port]:
-                        mensaje = mensaje + '\nCantidad de cartas del User ' + str(contador) + ': ' + str(len(ROOMpilesPlayers[port][jugador]))
+                        mensaje = mensaje + '\nCantidad de cartas del User ' + ROOMSusername[port][contador] + ': ' + str(len(ROOMpilesPlayers[port][jugador]))
                         contador = contador + 1
                     mensaje = mensaje + '\nCantidad de cartas en el Mazo: ' + str(len(ROOMpiles[port]))
                     mensajeEstado = {
@@ -1006,7 +1012,7 @@ def game(cli_sock, port, username):
                     mensaje = ''
                     contador = 0
                     for jugador in ROOMScon[port]:
-                        mensaje = mensaje + '\n' + str(contador) + '. User ' + str(contador)
+                        mensaje = mensaje + '\n' + str(contador) + '. User: ' + ROOMSusername[port][contador]
                         contador = contador + 1
                     mensajeEstadoPropio = {
                         'header' : 'listaJugadores',
@@ -1058,20 +1064,33 @@ s.bind((HOST, PORT))
 s.listen(10)
 threads = list()
 menu = ""
+
 while(True):
+    removeList = list()
     menu = ""
     #print("Amount of rooms ",len(ROOMS.keys()))
     roomAmount = len(ROOMS.keys())
     menu = menu + "1. Create new room \n"
-    if (roomAmount != 0):
-        keys = list(map(itemgetter(0), ROOMS.items())) 
-        for i in range(roomAmount):
-            menu = menu + str(i+2) + ". PORT: " + str(keys[i]) + "\n"
     #print(menu)
 
     
     conn, addr = s.accept()
     print ('Connected by', addr)
+
+    if (roomAmount != 0):
+        keys = list(map(itemgetter(0), ROOMS.items()))
+        for i in range(roomAmount):
+            print(startGame)
+            if (startGame[int(keys[i])] or ROOMS[int(keys[i])] > 4):
+                removeList.append(i)
+        if len(removeList) > 0:
+            for i in removeList:
+                print("Se quito", keys[i])
+                keys.pop(i)
+        roomAmount = len(keys)
+        for i in range(roomAmount):
+            menu = menu + str(i+2) + ". PORT: " + str(keys[i]) + "\n"
+    
     data_string = pickle.dumps(menu)
     conn.send(data_string)
     data = conn.recv(4096)
@@ -1091,6 +1110,7 @@ while(True):
             pass
         """
         str1 = c
+        startGame[c] = False
     else:
         str1 = str(keys[int(data_variable)-2])
     data_string = pickle.dumps(str1)
