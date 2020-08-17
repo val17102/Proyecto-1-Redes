@@ -16,7 +16,7 @@
 
 ### Herramientas
 
-- No es necesario instalar herramientas adicionales. Todo lo necesario para comenzar es el command prompt. Si es más conveniente se puede usar cualquier IDE pero no es necesario.
+> No es necesario instalar herramientas adicionales. Todo lo necesario para comenzar es el command prompt. Si es más conveniente se puede usar cualquier IDE pero no es necesario.
 
 ### Python
 
@@ -36,11 +36,9 @@
 
 ### Clone
 
-- Clonar este repositorio a tu ordenador local `https://github.com/val17102/Proyecto-1-Redes.git`
+> Clonar este repositorio a tu ordenador local `https://github.com/val17102/Proyecto-1-Redes.git`
 
 ### Setup
-
-- If you want more syntax highlighting, format your code like this:
 
 > Para iniciar el servidor: Abrir un command prompt en la ubicación del archivo "mainServer.py"
 
