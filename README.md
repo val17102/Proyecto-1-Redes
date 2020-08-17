@@ -20,9 +20,7 @@
 
 ### Python
 
--Descargar e instalar Python 3.x
-
-<a href="https://www.python.org/">
+-Descargar e instalar <a href="https://www.python.org/"> Python 3.x </a>
 
 ### Librerías
 
@@ -45,10 +43,21 @@
 ```shell
 $ py mainServer.py
 ```
+> También se puede usar
+
+```shell
+$ python mainServer.py
+```
+
 > Para iniciar un cliente: Abrir un command prompt en la ubicación del archivo "player.py"
 
 ```shell
 $ py player.py
+```
+> También se puede usar
+
+```shell
+$ python player.py
 ```
 
 ## Funcionamiento
