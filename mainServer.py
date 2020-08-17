@@ -2,8 +2,8 @@ import socket, os, pickle, threading, random
 from operator import itemgetter 
 
 ### Variables para el manejo de salas y conexiones de clientes
-HOST = 'localhost'
-PORT = 50001
+#HOST = 'localhost'
+#PORT = 50001
 ROOMS = {}
 ROOMScon = {}
 startGame = {}
@@ -1055,12 +1055,13 @@ def b_usr(cs_sock, sen_name, msg, port):
             client.send(pickle.dumps(objeto))
 
 ### Se solicita que se ingresen los parametros de IP y PORT del servidor
-HOST = input("Bienvenido a Exploding Kittens Server\nIngrese la IP del host: ")
+#HOST = input("Bienvenido a Exploding Kittens Server\nIngrese la IP del host: ")
+HOST = '0.0.0.0'
 PORT = int(input("\nIngrese el puerto del Server: "))
 c = PORT
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
-s.listen(10)
+s.listen(50)
 threads = list()
 menu = ""
 
