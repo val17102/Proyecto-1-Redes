@@ -250,8 +250,8 @@ cli_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ip_address = 'localhost'
 port = 50001
 ### Se solicita que se ingresen los parametros de IP y PORT del servidor
-#ip_address = input("Bienvenido a Exploding Kittens Server\nIngrese la IP del host: ")
-#port = int(input("\nIngrese el puerto del Server: "))
+ip_address = input("Bienvenido a Exploding Kittens Server\nIngrese la IP del host: ")
+port = int(input("\nIngrese el puerto del Server: "))
 ### Conexion al server creador de salas 
 cli_sock.connect((ip_address, port))
 data = cli_sock.recv(4096)
@@ -274,7 +274,7 @@ print(serverResponseRoom)
 
 cli_sock.connect((ip_address, serverResponseRoom))
 print("Conected")
-username = input("Ingrese su username")
+username = input("Ingrese su username: ")
 data_variable = pickle.dumps(username)
 cli_sock.send(data_variable)
 thread_send = threading.Thread(target = send)

@@ -110,7 +110,7 @@ def game(cli_sock, port, username):
                         random.shuffle(ROOMpiles[port])
                         random.shuffle(ROOMpiles[port])
                         random.shuffle(ROOMpiles[port])
-                        counter = 9
+
                         ### Se le da un defuse a cada jugador
                         for player in ROOMScon[port]:
                             ROOMpilesPlayers[port][player].append(7)
@@ -120,9 +120,8 @@ def game(cli_sock, port, username):
 
                             for k in range(7):
                                 pilaTemporal = ROOMpiles[port]
-                                ROOMpilesPlayers[port][player].append(counter)
+                                ROOMpilesPlayers[port][player].append(pilaTemporal.pop())
                                 ROOMpiles[port] = pilaTemporal
-                            counter = counter + 1
 
                         ### Se agregan los defuses y bombas al mazo
                         random.shuffle(ROOMpiles[port])
@@ -1042,8 +1041,8 @@ def broadcast_usr(uname, cli_sock, objeto, port):
         if data:
             print("{0} mando un mensaje".format(uname))
             b_usr(cli_sock, uname, data, port)
-    except Exception as x:
-        print(x.message)
+    except KeyError as e:
+        raise KeyError(str(e) + ' Error')
 
 def b_usr(cs_sock, sen_name, msg, port):
     for client in ROOMScon[port]:
@@ -1056,8 +1055,8 @@ def b_usr(cs_sock, sen_name, msg, port):
             client.send(pickle.dumps(objeto))
 
 ### Se solicita que se ingresen los parametros de IP y PORT del servidor
-#HOST = input("Bienvenido a Exploding Kittens Server\nIngrese la IP del host: ")
-#PORT = int(input("\nIngrese el puerto del Server: "))
+HOST = input("Bienvenido a Exploding Kittens Server\nIngrese la IP del host: ")
+PORT = int(input("\nIngrese el puerto del Server: "))
 c = PORT
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
