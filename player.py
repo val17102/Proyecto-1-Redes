@@ -20,7 +20,18 @@ CARDBOMB = 8
 def send():
     global inicioPartida
     while True:
-        print('\nTienes las siguientes opciones\n1. Iniciar la partida\n2. Enviar Mensaje\n3. Retroalimentacion')
+        print(
+            '''
+            \nTienes las siguientes opciones
+            \n1. Iniciar la partida
+            \n2. Enviar Mensaje
+            \n3. Realizar Jugada
+            \n4. Hacer un Favor
+            \n5. Ver estado del juego
+            \n6. Ver cartas que tengo
+            \n7. Ver lista de jugadores conectados
+            '''
+        )
         opcion = int(input('\nIngresa el numero de opcion > '))
         if opcion == 1:
             if inicioPartida == False:
@@ -34,7 +45,7 @@ def send():
 
         elif opcion == 2:
             if inicioPartida == True:
-                msg = input('\nMe > ')
+                msg = input('\nYo > ')
                 objeto = {
                     'opcion' : opcion,
                     'mensaje': msg 
@@ -46,13 +57,123 @@ def send():
 
         elif opcion == 3:
             if inicioPartida == True:
+                jugada = int(input('\nElige una jugada: \n1. Usar carta\n2. Tomar carta\n> '))
+                if jugada == 1:
+                    objeto = {
+                        'opcion' : 5
+                    }
+                    data_string = pickle.dumps(objeto)
+                    cli_sock.send(data_string)
+                    objeto = {
+                        'opcion' : 6
+                    }
+                    data_string = pickle.dumps(objeto)
+                    cli_sock.send(data_string)
+                    carta = int(input('\nElige el numero de carta a usar > '))
+                    objeto = {
+                        'opcion' : 7
+                    }
+                    data_string = pickle.dumps(objeto)
+                    cli_sock.send(data_string)
+                    favor = int(input('''
+                        \nSi la carta es un favor o un gato elija el numero de Usuario a pedir la carta (si no lo es ingrese cualquier numero)  > 
+                    '''))
+                    gatos = int(input('''
+                        \nSi la carta es un tipo de gato elija una de las siguientes opciones (si no lo es ingrese cualquier numero)
+                        \n1. Usar 2 gatos iguales
+                        \n2. Usar 3 gatos iguales
+                        \n> 
+                    '''))
+                    cartaPedir = ''
+                    if gatos == 1:
+                        cartaPedir = int(input('\nIngrese la posicion de la carta quitar (desde posicion 1 al numero de cartas del jugador): '))
+                    elif gatos == 2:
+                        print('''
+                            \n1. Carta NO
+                            \n2. Carta ATACK
+                            \n3. Carta SKIP
+                            \n4. Carta FAVOR
+                            \n5. Carta SHUFFLE
+                            \n6. Carta SEE FUTURE
+                            \n7. Carta DEFUSE
+                            \n8. Carta GATO BARBA
+                            \n9. Carta GATO ARCOIRIS
+                            \n10. Carta GATO SANDIA
+                            \n11. Carta GATO TACO
+                            \n12. Carta GATO PAPA
+                        ''')
+                        cartaPedir = int(input('\nIngrese la carta que desea quitar: '))
+                    objeto = {
+                        'opcion' : opcion,
+                        'jugada' : jugada,
+                        'carta' : carta,
+                        'favor' : favor,
+                        'gatos' : gatos,
+                        'cartaPedir' : cartaPedir
+                    }
+                    data_string = pickle.dumps(objeto)
+                    cli_sock.send(data_string)
+                elif jugada == 2:
+                    objeto = {
+                        'opcion' : opcion,
+                        'jugada' : jugada
+                    }
+                    data_string = pickle.dumps(objeto)
+                    cli_sock.send(data_string)
+                else: 
+                    print('Opcion invalida.')
+            else:
+                print('La partida aun no ha sido iniciada.')  
+
+        elif opcion == 4:
+            if inicioPartida == True:
+                objeto = {
+                    'opcion' : 5
+                }
+                data_string = pickle.dumps(objeto)
+                cli_sock.send(data_string)
+                carta = int(input('\nElija el numero de carta de su mazo a dar > '))
+                objeto = {
+                    'opcion' : opcion,
+                    'carta' : carta
+                }
+                data_string = pickle.dumps(objeto)
+                cli_sock.send(data_string)
+            else:
+                print('La partida aun no ha sido iniciada.')    
+
+        elif opcion == 5:
+            if inicioPartida == True:
                 objeto = {
                     'opcion' : opcion
                 }
                 data_string = pickle.dumps(objeto)
                 cli_sock.send(data_string)
             else:
-                print('La partida aun no ha sido iniciada.')        
+                print('La partida aun no ha sido iniciada.') 
+
+        elif opcion == 6:
+            if inicioPartida == True:
+                objeto = {
+                    'opcion' : opcion
+                }
+                data_string = pickle.dumps(objeto)
+                cli_sock.send(data_string)
+            else:
+                print('La partida aun no ha sido iniciada.')    
+
+        elif opcion == 7:
+            if inicioPartida == True:
+                objeto = {
+                    'opcion' : opcion
+                }
+                data_string = pickle.dumps(objeto)
+                cli_sock.send(data_string)
+            else:
+                print('La partida aun no ha sido iniciada.')  
+
+        else:
+            print('Opcion invalida')             
 
 ## Recibir mensajes
 def receive():
@@ -79,6 +200,46 @@ def receive():
             print('\n> ')
 
         if objeto['header'] == 'turno':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'estado':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'estadoPropio':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'response':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'fuera':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'futuro':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'usoCarta':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'listaJugadores':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'ganar':
             mensajeTurno = objeto['mensaje']
             print(mensajeTurno)
             print('\n> ')
